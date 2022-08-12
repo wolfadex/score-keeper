@@ -4,6 +4,7 @@ import Array exposing (Array)
 import Array.Extra
 import Browser
 import Element exposing (..)
+import Element.Background as Background
 import Element.Border as Border
 import Element.Input as Input
 import Html exposing (Html)
@@ -115,19 +116,21 @@ view model =
 viewPlayers : Array Player -> Element Msg
 viewPlayers players =
     column
-        []
+        [ padding 8, spacing 8 ]
         [ viewNewPlayer
         , players
             |> Array.toList
             |> List.indexedMap viewPlayer
-            |> row [ width fill, spacing 8, padding 8 ]
+            |> row [ width fill, spacing 8 ]
         ]
 
 
 viewNewPlayer : Element Msg
 viewNewPlayer =
     Input.button
-        []
+        [ paddingXY 16 8
+        , Background.color green
+        ]
         { onPress = Just AddPlayer
         , label = text "Add Player"
         }
@@ -156,12 +159,25 @@ viewPlayer index player =
                     row [ spacing 4, alignRight ]
                         [ text (String.fromInt score)
                         , text <|
-                            if diff < 0 then "-" else "+"
+                            if diff < 0 then
+                                "-"
+
+                            else
+                                "+"
                         , text (String.fromInt (abs diff))
                         ]
                 )
             |> column [ alignRight ]
-        , el [] none
+        , el
+            [ width fill
+            , Border.widthEach
+                { top = 1
+                , bottom = 0
+                , left = 0
+                , right = 0
+                }
+            ]
+            none
         , el [ alignRight ] (text (String.fromInt player.score.current))
         , wrappedRow
             [ spacing 8 ]
@@ -173,7 +189,10 @@ viewPlayer index player =
                 , label = Input.labelHidden "score change amount"
                 }
             , Input.button
-                [ alignRight ]
+                [ paddingXY 16 8
+                , Background.color blue
+                , alignRight
+                ]
                 { onPress =
                     case String.toInt player.score.changeAmount of
                         Nothing ->
@@ -194,3 +213,13 @@ main =
         , view = view
         , update = update
         }
+
+
+green : Color
+green =
+    rgb 0.6 0.8 0.5
+
+
+blue : Color
+blue =
+    rgb 0.7 0.8 1
