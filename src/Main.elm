@@ -27,8 +27,8 @@ type alias Score =
     }
 
 
-initialModel : Model
-initialModel =
+init : Model
+init =
     { players = Array.fromList []
     }
 
@@ -190,7 +190,7 @@ viewPlayer index player =
 main : Program () Model Msg
 main =
     Browser.sandbox
-        { init = initialModel
+        { init = init
         , view = view
         , update = update
         }
